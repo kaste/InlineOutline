@@ -1,0 +1,59 @@
+[
+    { "keys": ["ctrl+shift+o"], "command": "enter_outline_mode" },
+    { "keys": ["ctrl+shift+o"], "command": "chain", "args": {"commands":
+        [
+            ["enter_outline_mode"],
+            ["outline_enter_search"]
+        ]}
+    },
+    {
+        "keys": ["ctrl+shift+o"], "command": "abort_outline_mode",
+        "context": [{ "key": "outline_mode" }]
+    },
+    {
+        "keys": ["enter"], "command": "exit_outline_mode",
+        "context": [{ "key": "outline_mode" }]
+    },
+    {
+        "keys": ["/"], "command": "outline_enter_search",
+        "context": [{ "key": "outline_mode" }]
+    },
+
+    {
+        "keys": ["down"], "command": "outline_next_symbol",
+        "context": [{ "key": "outline_mode" }]
+    },
+    {
+        "keys": ["."], "command": "outline_next_symbol",
+        "context": [{ "key": "outline_mode" }]
+    },
+    {
+        "keys": ["up"], "command": "outline_prev_symbol",
+        "context": [{ "key": "outline_mode" }]
+    },
+    {
+        "keys": [","], "command": "outline_prev_symbol",
+        "context": [{ "key": "outline_mode" }]
+    },
+    {
+        "keys": ["down"], "command": "outline_next_symbol2",
+        "context": [{ "key": "setting.outline_mode_search_panel" }]
+    },
+    {
+        "keys": ["ctrl+j"], "command": "outline_next_symbol2",
+        "context": [{ "key": "setting.outline_mode_search_panel" }]
+    },
+    {
+        "keys": ["up"], "command": "outline_prev_symbol2",
+        "context": [{ "key": "setting.outline_mode_search_panel" }]
+    },
+    {
+        "keys": ["ctrl+k"], "command": "outline_prev_symbol2",
+        "context": [{ "key": "setting.outline_mode_search_panel" }]
+    },
+    {
+        "keys": ["ctrl+shift+o"], "command": "hide_panel",
+        "context": [{ "key": "setting.outline_mode_search_panel" }]
+    },
+
+]
