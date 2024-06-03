@@ -34,7 +34,9 @@ class TextRange(NamedTuple):
         return cls(view.substr(region), region)
 
 
-ViewState: TypeAlias = "tuple[tuple[float, float], list[tuple[int, int]]]"
+ViewportPosition: TypeAlias = "tuple[float, float]"
+PickableSelection: TypeAlias = "list[tuple[int, int]]"
+ViewState: TypeAlias = "tuple[ViewportPosition, PickableSelection]"
 
 
 def view_state(view: sublime.View) -> ViewState:
