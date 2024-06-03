@@ -265,8 +265,7 @@ class outline_prev_symbol(sublime_plugin.TextCommand):
 
 
 class outline_enter_search(sublime_plugin.TextCommand):
-    def run(self, edit):
-        # type: (sublime.Edit) -> None
+    def run(self, edit: sublime.Edit, initial_text: str = "") -> None:
         view = self.view
         original_view_state = view_state(view)
         folded_regions = view.folded_regions()
@@ -334,7 +333,7 @@ class outline_enter_search(sublime_plugin.TextCommand):
 
         panel = window.show_input_panel(
             "Search",
-            "",
+            initial_text,
             on_done=on_done,
             on_change=on_change,
             on_cancel=on_cancel,
