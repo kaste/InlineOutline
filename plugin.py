@@ -83,6 +83,8 @@ class enter_outline_mode(sublime_plugin.TextCommand):
             flash(view, "This view defines no symbols.")
             return
         focus_regions(view, [s.region for s in symbols])
+        _, y = view.viewport_position()
+        view.set_viewport_position((0, y))
 
         _, nearest_region = min(
             (
