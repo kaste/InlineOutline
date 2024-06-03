@@ -357,9 +357,9 @@ def fuzzyfind(primer: str, collection: Iterable[TextRange]) -> list[tuple[TextRa
         if score := fuzzy_score(primer, item.text):
             suggestions.append((score, item))
 
-    print("\n-", primer)
-    for score, item in sorted(suggestions):
-        print("score", score, item.text)
+    # print("\n-", primer)
+    # for score, item in sorted(suggestions):
+    #     print("score", score, item.text)
     return [(item, positions) for (_, positions), item in sorted(suggestions)]
 
 
