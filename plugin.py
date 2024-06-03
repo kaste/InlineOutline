@@ -463,5 +463,5 @@ def symbol_regions(view: sublime.View) -> list[sublime.SymbolRegion]:
 
 
 @lru_cache(maxsize=16)
-def _symbol_regions(view: sublime.View, _cc: int)  -> list[sublime.SymbolRegion]:
+def _symbol_regions(view: sublime.View, _cc: int) -> list[sublime.SymbolRegion]:
     return view.symbol_regions()
