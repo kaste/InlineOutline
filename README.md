@@ -21,3 +21,14 @@ Finally, `<enter>` to goto to that symbol or `<esc>` to reset.  As usual.
 
 Currently it binds `primary+shift+o` (`primary` is `ctrl`), `o` as in outline.  Not sure 
 if that's a good idea tbh. 
+
+You can set an initial search term, e.g.
+
+```json
+{
+    "keys": ["primary+shift+o"],
+    "command": "enter_outline_mode",
+    "args": { "enter_search": "class " }
+}
+```
+would let you see all defined *classes* in a python file.

@@ -1,10 +1,6 @@
 [
-    { "keys": ["primary+shift+o"], "command": "enter_outline_mode" },
-    { "keys": ["primary+shift+o"], "command": "chain", "args": {"commands":
-        [
-            ["enter_outline_mode"],
-            ["outline_enter_search"]
-        ]}
+    { "keys": ["primary+shift+o"], "command": "enter_outline_mode",
+      "args": { "enter_search": true }
     },
     {
         "keys": ["primary+shift+o"], "command": "abort_outline_mode",

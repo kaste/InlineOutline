@@ -73,7 +73,7 @@ class OutlineModeQueryContext(sublime_plugin.EventListener):
 
 
 class enter_outline_mode(sublime_plugin.TextCommand):
-    def run(self, edit: sublime.Edit) -> None:
+    def run(self, edit: sublime.Edit, enter_search: str | bool = False) -> None:
         view = self.view
         original_view_state = view_state(view)
         frozen_sel = [s for s in view.sel()]
@@ -103,6 +103,13 @@ class enter_outline_mode(sublime_plugin.TextCommand):
         set_sel(view, [flip_region(nearest_region)])
         view.settings().set("outline_mode", True)
         view.settings().set("original_view_state", original_view_state)
+
+        if enter_search:
+            self.view.run_command("outline_enter_search", (
+                {"initial_text": enter_search}
+                if isinstance(enter_search, str)
+                else {}
+            ))
 
 
 class abort_outline_mode(sublime_plugin.TextCommand):
