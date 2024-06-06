@@ -14,13 +14,13 @@ E.g. walk using the arrow keys (or `,`and `.`)
 
 https://github.com/kaste/InlineOutline/assets/8558/d6eca69b-c9b9-46b3-9b66-e61dd6303b47
 
-Finally, `<enter>` to goto to that symbol or `<esc>` to reset.  As usual.
+As usual, `<enter>` will go to to the selected symbol and `<esc>` will reset the
+cursor and viewport.
 
 
 # Key binding
 
-Currently it binds `primary+shift+o` (`primary` is `ctrl`), `o` as in outline.  Not sure 
-if that's a good idea tbh. 
+Currently it binds `primary+shift+o` (`primary` is `ctrl`), `o` as in outline.
 
 You can set an initial search term, e.g.
 
