@@ -288,6 +288,7 @@ class outline_enter_search(sublime_plugin.TextCommand):
         def on_done(term: str) -> None:
             view.add_regions("matched_chars", [])
             view.run_command("exit_outline_mode")
+            view.show(view.sel())
 
         def on_change(term: str) -> None:
             if not term:
