@@ -336,7 +336,7 @@ class outline_enter_search(sublime_plugin.TextCommand):
             # restore_initial_state()
 
         panel = window.show_input_panel(
-            "Search",
+            "",
             initial_text,
             on_done=on_done,
             on_change=on_change,
