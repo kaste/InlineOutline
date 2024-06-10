@@ -2,6 +2,7 @@ from __future__ import annotations
 from contextlib import contextmanager
 from functools import lru_cache
 from itertools import chain, tee
+import operator as op
 
 import sublime
 import sublime_plugin
@@ -56,17 +57,20 @@ class OutlineModeQueryContext(sublime_plugin.EventListener):
         match_all: bool
     ) -> bool | None:
         if key == "outline_mode":
-            if operator != sublime.OP_EQUAL:
-                print(f"Context '{key}' only supports operator 'equal'.")
+            if operator not in (sublime.OP_EQUAL, sublime.OP_NOT_EQUAL):
+                print(f"Context '{key}' only supports operator 'equal' and 'not_equal'.")
                 return False
 
-            if operand is not True:
-                print(f"Context '{key}' only supports operand 'true'.")
+            if operand not in (True, False):
+                print(f"Context '{key}' only supports operand 'true' and 'false'.")
                 return False
 
-            return (
-                bool(view.folded_regions())
-                and view.settings().get("outline_mode")
+            return (op.eq if operator == sublime.OP_EQUAL else op.ne)(
+                (
+                    bool(view.folded_regions())
+                    and view.settings().get("outline_mode")
+                ),
+                operand
             )
 
         return None
