@@ -387,12 +387,6 @@ class outline_enter_search(sublime_plugin.TextCommand):
         panel.settings().set("outline_mode_search_panel", True)
 
 
-class outline_apply_view_state(sublime_plugin.TextCommand):
-    def run(self, edit: sublime.Edit, state: ViewState) -> None:
-        view = self.view
-        apply_view_state(view, state)
-
-
 def fuzzyfind(primer: str, collection: Iterable[TextRange]) -> list[tuple[TextRange, list[int]]]:
     """
     Fuzzy match a primer, e.g. a search term, against the items in collection.
