@@ -345,7 +345,6 @@ class outline_enter_search(sublime_plugin.TextCommand):
             if view.settings().get("outline_mode") and view.folded_regions():
                 view.add_regions("matched_chars", [])
                 view.run_command("abort_outline_mode")
-            # restore_initial_state()
 
         panel = window.show_input_panel(
             "",
