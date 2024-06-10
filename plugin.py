@@ -119,9 +119,17 @@ class enter_outline_mode(sublime_plugin.TextCommand):
 class abort_outline_mode(sublime_plugin.TextCommand):
     def run(self, edit: sublime.Edit) -> None:
         view = self.view
+        window = view.window()
+        if not window:
+            return
+        if PANELS.get(window):
+            window.run_command("hide_panel", {"cancel": True})
+            # "hide_panel" (`on_cancel()` below) will recurse to this
+            # `abort_outline_mode`!
+            return
+
         original_view_state: ViewState | None
         original_view_state = view.settings().get("original_view_state")
-
         view.run_command("exit_outline_mode")
         if original_view_state:
             apply_view_state(view, original_view_state)
@@ -141,6 +149,14 @@ def apply_view_state(view: sublime.View, state: ViewState) -> None:
 class exit_outline_mode(sublime_plugin.TextCommand):
     def run(self, edit: sublime.Edit) -> None:
         view = self.view
+        window = view.window()
+        if not window:
+            return
+        if PANELS.get(window):
+            IGNORE_CANCEL_SIGNAL.add(window)
+            window.run_command("hide_panel", {"cancel": True})
+            IGNORE_CANCEL_SIGNAL.discard(window)
+
         view.run_command("fixed_unfold_all")
         view.settings().erase("outline_mode")
         view.settings().erase("original_view_state")
@@ -279,15 +295,23 @@ class outline_prev_symbol(sublime_plugin.TextCommand):
         view.show(s.region)
 
 
+PANELS: dict[sublime.Window, sublime.View] = {}
+IGNORE_CANCEL_SIGNAL: set[sublime.Window] = set()
+
+
 class outline_enter_search(sublime_plugin.TextCommand):
     def run(self, edit: sublime.Edit, initial_text: str = "") -> None:
         view = self.view
+        window = view.window()
+        if not window:
+            return
+        if panel := PANELS.get(window):
+            window.focus_view(panel)
+            return
+
         original_view_state = view_state(view)
         folded_regions = view.folded_regions()
         if not folded_regions:
-            return
-        window = view.window()
-        if not window:
             return
 
         def restore_initial_state():
@@ -297,6 +321,7 @@ class outline_enter_search(sublime_plugin.TextCommand):
             view.add_regions("matched_chars", [])
 
         def on_done(term: str) -> None:
+            PANELS.pop(window, None)
             view.add_regions("matched_chars", [])
             view.run_command("exit_outline_mode")
             view.show(view.sel())
@@ -342,8 +367,13 @@ class outline_enter_search(sublime_plugin.TextCommand):
                 set_sel(view, [sublime.Region(best_match[0].a, best_match[-1].b)])
 
         def on_cancel() -> None:
-            if view.settings().get("outline_mode") and view.folded_regions():
-                view.add_regions("matched_chars", [])
+            PANELS.pop(window, None)
+            view.add_regions("matched_chars", [])
+            if (
+                window not in IGNORE_CANCEL_SIGNAL
+                and view.settings().get("outline_mode")
+                and view.folded_regions()
+            ):
                 view.run_command("abort_outline_mode")
 
         panel = window.show_input_panel(
@@ -353,6 +383,7 @@ class outline_enter_search(sublime_plugin.TextCommand):
             on_change=on_change,
             on_cancel=on_cancel,
         )
+        PANELS[window] = panel
         panel.settings().set("outline_mode_search_panel", True)
 
 
