@@ -3,6 +3,8 @@ from contextlib import contextmanager
 from functools import lru_cache
 from itertools import chain, tee
 import operator as op
+from pathlib import Path
+from string import Template
 
 import sublime
 import sublime_plugin
@@ -39,12 +41,54 @@ ViewportPosition: TypeAlias = "tuple[float, float]"
 PickableSelection: TypeAlias = "list[tuple[int, int]]"
 ViewState: TypeAlias = "tuple[ViewportPosition, PickableSelection]"
 
+OBSERVER_KEY = "83112d45-8bc5-478d-923c-450bc49e81bd"
+SETTINGS_FILE = "InlineOutline.sublime-settings"
+
 
 def view_state(view: sublime.View) -> ViewState:
     return (
         view.viewport_position(),
         [s.to_tuple() for s in view.sel()]
     )
+
+
+def plugin_loaded() -> None:
+    plugin_settings = sublime.load_settings(SETTINGS_FILE)
+    plugin_settings.add_on_change(OBSERVER_KEY, settings_changed)
+    settings_changed()
+
+
+def plugin_unloaded() -> None:
+    plugin_settings = sublime.load_settings(SETTINGS_FILE)
+    plugin_settings.clear_on_change(OBSERVER_KEY)
+
+
+def settings_changed() -> None:
+    plugin_settings = sublime.load_settings(SETTINGS_FILE)
+    chord = plugin_settings.get("bind")
+    write_key_bindings(chord)
+
+
+@lru_cache(maxsize=1)
+def write_key_bindings(chord: str):
+    pp = Path(sublime.packages_path())
+    package = "InlineOutline"
+    fpath = pp / package
+
+    if chord:
+        template = sublime.load_resource(str(
+            Path("Packages") / package / "Default.sublime-keymap-template.jsonc"
+        ))
+        keymap = Template(template).substitute(main_key=chord)
+
+        fpath.mkdir(exist_ok=True)
+        (fpath / "Default.sublime-keymap").write_text(keymap)
+
+    else:
+        fpath = pp / package
+        (fpath / "Default.sublime-keymap").unlink(missing_ok=True)
+        if not list(fpath.glob("*")):
+            fpath.rmdir()
 
 
 class OutlineModeQueryContext(sublime_plugin.EventListener):

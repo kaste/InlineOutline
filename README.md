@@ -1,10 +1,10 @@
 ## Hi 👋🏾
 
-This is a plugin for Sublime Text.  It started as a temporary Outline-mode, 
+This is a plugin for Sublime Text.  It is a temporary Outline-mode,
 
 https://github.com/kaste/InlineOutline/assets/8558/ae50d907-3004-4320-9740-8d3467e223cc
 
-and now is a complete replacement but different approach to *Goto Symbol*.
+and also a complete replacement but different approach to *Goto Symbol*.
 
 E.g. fuzzy-search for a symbol,
 
@@ -20,7 +20,8 @@ cursor and viewport.
 
 # Key binding
 
-Currently it binds `primary+shift+o` (`primary` is `ctrl`), `o` as in outline.
+By default the plugin binds `primary+shift+o` (`primary` is `ctrl`), `o` as in
+outline.  You can change that in the settings (`Preferences: InlineOutline Settings`).
 
 You can set an initial search term, e.g.
 

@@ -1,0 +1,18 @@
+[
+  { "caption": "Preferences: InlineOutline Settings",
+    "command": "edit_settings",
+    "args": {
+      "base_file": "${packages}/InlineOutline/InlineOutline.sublime-settings",
+      "default": "{\n\t$0\n}\n"
+    }
+  },
+  { "caption": "InlineOutline: Open Readme",
+    "command": "open_file",
+    "args": {
+      "file": "${packages}/InlineOutline/README.md"
+    }
+  },
+  { "caption": "InlineOutline: Enter Outline mode",
+    "command": "enter_outline_mode",
+  },
+]
