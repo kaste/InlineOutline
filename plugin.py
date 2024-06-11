@@ -166,20 +166,15 @@ class enter_outline_mode(sublime_plugin.TextCommand):
 class abort_outline_mode(sublime_plugin.TextCommand):
     def run(self, edit: sublime.Edit) -> None:
         view = self.view
-        window = view.window()
-        if not window:
-            return
-        if PANELS.get(window):
-            window.run_command("hide_panel", {"cancel": True})
-            # "hide_panel" (`on_cancel()` below) will recurse to this
-            # `abort_outline_mode`!
-            return
 
         original_view_state: ViewState | None
         original_view_state = view.settings().get("original_view_state")
         view.run_command("exit_outline_mode")
         if original_view_state:
             apply_view_state(view, original_view_state)
+
+        if (window := view.window()) and PANELS.get(window):
+            window.run_command("hide_panel", {"cancel": True})
 
 
 def apply_view_state(view: sublime.View, state: ViewState) -> None:
@@ -196,17 +191,13 @@ def apply_view_state(view: sublime.View, state: ViewState) -> None:
 class exit_outline_mode(sublime_plugin.TextCommand):
     def run(self, edit: sublime.Edit) -> None:
         view = self.view
-        window = view.window()
-        if not window:
-            return
-        if PANELS.get(window):
-            IGNORE_CANCEL_SIGNAL.add(window)
-            window.run_command("hide_panel", {"cancel": True})
-            IGNORE_CANCEL_SIGNAL.discard(window)
 
         view.run_command("fixed_unfold_all")
         view.settings().erase("outline_mode")
         view.settings().erase("original_view_state")
+
+        if (window := view.window()) and PANELS.get(window):
+            window.run_command("hide_panel", {"cancel": True})
 
 
 class fixed_unfold_all(sublime_plugin.TextCommand):
@@ -343,7 +334,6 @@ class outline_prev_symbol(sublime_plugin.TextCommand):
 
 
 PANELS: dict[sublime.Window, sublime.View] = {}
-IGNORE_CANCEL_SIGNAL: set[sublime.Window] = set()
 
 
 class outline_enter_search(sublime_plugin.TextCommand):
@@ -416,11 +406,7 @@ class outline_enter_search(sublime_plugin.TextCommand):
         def on_cancel() -> None:
             PANELS.pop(window, None)
             view.add_regions("matched_chars", [])
-            if (
-                window not in IGNORE_CANCEL_SIGNAL
-                and view.settings().get("outline_mode")
-                and view.folded_regions()
-            ):
+            if view.settings().get("outline_mode") and view.folded_regions():
                 view.run_command("abort_outline_mode")
 
         panel = window.show_input_panel(
