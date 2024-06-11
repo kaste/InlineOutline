@@ -70,16 +70,19 @@ def settings_changed() -> None:
 
 
 @lru_cache(maxsize=1)
-def write_key_bindings(chord: str):
+def write_key_bindings(chord: str | list[str]):
     pp = Path(sublime.packages_path())
     package = "InlineOutline"
     fpath = pp / package
 
     if chord:
+        if isinstance(chord, str):
+            chord = [chord]
+        chord_ = "[{}]".format(", ".join(f'"{key}"' for key in chord))
         template = sublime.load_resource(str(
-            Path("Packages") / package / "Default.sublime-keymap-template.jsonc"
+            Path("Packages") / package / "keymap-template.yaml"
         ))
-        keymap = Template(template).substitute(main_key=chord)
+        keymap = Template(template).substitute(main_key=chord_)
 
         fpath.mkdir(exist_ok=True)
         (fpath / "Default.sublime-keymap").write_text(keymap)

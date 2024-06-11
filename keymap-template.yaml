@@ -1,10 +1,11 @@
+// Auto generated. DO NOT EDIT.
 [
     {
-        "keys": ["$main_key"], "command": "enter_outline_mode",
+        "keys": $main_key, "command": "enter_outline_mode",
         "args": { "enter_search": true }
     },
     {
-        "keys": ["$main_key"], "command": "abort_outline_mode",
+        "keys": $main_key, "command": "abort_outline_mode",
         "context": [{ "key": "outline_mode" }]
     },
     {
@@ -49,8 +50,7 @@
         "context": [{ "key": "setting.outline_mode_search_panel" }]
     },
     {
-        "keys": ["$main_key"], "command": "hide_panel",
+        "keys": $main_key, "command": "hide_panel",
         "context": [{ "key": "setting.outline_mode_search_panel" }]
     },
-
 ]

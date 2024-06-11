@@ -3,6 +3,8 @@
     // You may want to set `ctrl+r` if you want to replace Sublime's default
     // goto symbol binding.
     "bind":  "primary+shift+o",
+    // For key chords, use the standard array notation, e.g.
+    // "bind":  ["ctrl+k", "ctrl+j"],
 
     // If you set this to a falsy value, no bindings *at all* will be installed.
     // "bind":  "",
