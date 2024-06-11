@@ -1,17 +1,17 @@
 {
-    // The main keybinding to enter or toggle the outline mode
+    // The main keybinding to enter or toggle the outline mode.
     // You may want to set `ctrl+r` if you want to replace Sublime's default
     // goto symbol binding.
     "bind":  "primary+shift+o",
     // For key chords, use the standard array notation, e.g.
     // "bind":  ["ctrl+k", "ctrl+j"],
-
-    // If you set this to a falsy value, no bindings *at all* will be installed.
+    //
+    // If you set a falsy value, no bindings *at all* will be installed.
     // "bind":  "",
     // You probably don't want this.
     //
-    // You may set it to a value that never matches in case you don't want a
-    // global key binding to enter/exit the Outline mode but still want the
-    // local contextual bindings installed, e.g. (`up`/`down`/`enter`):
+    // More likely, you just don't want any *global* key binding to enter/exit
+    // the Outline mode while still having the local, contextual bindings
+    // installed, e.g. (`up`/`down`/`enter`).  In that case, set:
     // "bind":  "never",
 }
