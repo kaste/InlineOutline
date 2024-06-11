@@ -12,7 +12,8 @@ don't want any global bindings, just set `never`.
 
 But before that, just try the default for now.  Right in this view, hit
 `primary-shift+o` repeatedly.  See how the text collapses to just the
-headlines, and then back again.
+headlines, and then back again.  (Doesn't work?  Check if this file is
+displayed as Markdown.)
 
 Now, in Outline mode, use `up` and `down` to navigate.  Press `enter` to
 commit, i.e., exit the Outline mode and scroll to the selected headline. `esc`
