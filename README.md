@@ -1,14 +1,14 @@
 ## Hi 👋🏾
 
-This is a plugin for Sublime Text.  It is a temporary Outline-mode,
+This is a plugin for Sublime Text.  It is a temporary Outline-mode.
 
-| Normal Mode                     | InlineOutline Mode               |
-|---------------------------------|----------------------------------|
-| ![image](assets/NormalMode.png) | ![image](assets/OutlineMode.png) |
+| Normal Mode                | InlineOutline Mode          |
+|----------------------------|-----------------------------|
+| ![](assets/NormalMode.png) | ![](assets/OutlineMode.png) |
+| ![](assets/NormalMd.png)   | ![](assets/OutlineMd.png)   |
 
-and also a complete replacement but different approach to *Goto Symbol*.
-
-For example, fuzzy-search for a symbol:
+At the same time, it is also a complete replacement but different approach to *Goto Symbol*.
+For example, you can fuzzy-search:
 
 https://github.com/kaste/InlineOutline/assets/8558/42a8a375-2bae-4385-b0df-8580d6c83f69
 
