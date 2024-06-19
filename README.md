@@ -1,8 +1,9 @@
 ## Hi 👋🏾
 
 This is a plugin for Sublime Text.  It is a temporary Outline-mode,
-
-https://github.com/kaste/InlineOutline/assets/8558/ae50d907-3004-4320-9740-8d3467e223cc
+| Normal Mode | InlineOutline Mode |
+|---------|---------|
+| ![image](https://github.com/kaste/InlineOutline/assets/8558/3736cef5-44fe-47ff-bcb7-ab0608f43351) | ![image](https://github.com/kaste/InlineOutline/assets/8558/6e76ef65-c5cb-4da7-8e69-9e5ffcfa3685) |
 
 and also a complete replacement but different approach to *Goto Symbol*.
 
