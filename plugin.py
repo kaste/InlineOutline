@@ -126,30 +126,34 @@ class OutlineModeQueryContext(sublime_plugin.EventListener):
 class enter_outline_mode(sublime_plugin.TextCommand):
     def run(self, edit: sublime.Edit, enter_search: str | bool = False) -> None:
         view = self.view
-        original_view_state = view_state(view)
-        frozen_sel = [s for s in view.sel()]
-        sel = frozen_sel[0]
-        caret = sel.begin()
-        row, _ = view.rowcol(caret)
         symbols = symbol_regions(view)
         if not symbols:
             flash(view, "This view defines no symbols.")
             return
+
+        frozen_sel = [s for s in view.sel()]
+        sel = frozen_sel[0]
+        caret = sel.begin()
+        view_size = view.size()
+        next_non_empty_line = TextRange.from_region(view, view.full_line(caret))
+        while True:
+            if next_non_empty_line.text.strip() or next_non_empty_line.region.end() >= view_size:
+                break
+            next_non_empty_line = TextRange.from_region(view, view.full_line(next_non_empty_line.region.end()))
+
+        original_view_state = view_state(view)
         focus_regions(view, [s.region for s in symbols])
         _, y = view.viewport_position()
         view.set_viewport_position((0, y))
 
-        _, nearest_region = min(
+        row, _ = view.rowcol(next_non_empty_line.region.a)
+        nearest_region = next(
             (
-                (
-                    min(abs(line.start - row), abs(line.end - row)),
-                    s.region
-                )
-                for s in symbols
-                if (line := LineSpan.from_region(view, s.region))
+                s.region
+                for s in reversed(symbols)
+                if view.rowcol(s.region.a)[0] <= row
             ),
-            key=lambda distance_symbol: distance_symbol[0],
-            default=(caret, sublime.Region(caret))
+            symbols[0].region
         )
         set_sel(view, [flip_region(nearest_region)])
         view.settings().set("outline_mode", True)
