@@ -464,7 +464,7 @@ def fuzzy_score(primer: str, item: str) -> tuple[float, list[int]] | None:
 
 
 def find_char(primer_rest, item, item_l, start: int) -> tuple[int, float]:
-    prev = ''
+    prev = ""
     first_seen = -1
     needle = primer_rest[0]
     for idx, ch in enumerate(item[start:], start):
