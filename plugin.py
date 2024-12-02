@@ -4,6 +4,7 @@ from functools import lru_cache
 from itertools import chain, tee
 import operator as op
 from pathlib import Path
+import string
 from string import Template
 
 import sublime
@@ -14,6 +15,7 @@ from typing import Iterable, Iterator, NamedTuple, Sequence, TypeVar
 from typing_extensions import TypeAlias
 T = TypeVar("T")
 flatten = chain.from_iterable
+word_separators = string.punctuation + string.whitespace
 
 
 class LineSpan(NamedTuple):
@@ -440,47 +442,53 @@ def fuzzyfind(primer: str, collection: Iterable[TextRange]) -> list[tuple[TextRa
 
 
 def fuzzy_score(primer: str, item: str) -> tuple[float, list[int]] | None:
-    pos, score = -1, 0.0
     item_l = item.lower()
     primer_l = primer.lower()
-    positions: list[int] = []
+    pos, score = -1, 0.0
+    positions = []
     for idx in range(len(primer)):
         try:
-            pos, _score = find_char(primer_l[idx:], item, item_l, pos + 1)
+            pos, _score = find_char(primer, primer_l, idx, item, item_l, pos + 1)
         except ValueError:
             return None
 
         positions.append(pos)
-        score += 2 * _score
-        if pos == 0:
-            score -= 1
-        if _score <= 0 and primer[idx] == item[pos]:
-            score -= 0.5 if primer[idx] == primer_l[idx] else 2
-
+        score += _score
         if score > 10:
             return None
 
     return (score, positions)
 
 
-def find_char(primer_rest, item, item_l, start: int) -> tuple[int, float]:
+def find_char(
+    primer: str, primer_l: str, cur_pos_in_primer: int,
+    item: str, item_l: str, cur_pos_in_item: int
+) -> tuple[int, float]:
+    pos, score_ = find_char_(primer_l[cur_pos_in_primer:], item, item_l, cur_pos_in_item)
+
+    score = 2 * score_
+    if score_ <= 0 and primer[cur_pos_in_primer] == item[pos]:
+        score -= 0.5 if primer[cur_pos_in_primer] == primer_l[cur_pos_in_primer] else 2
+    return pos, score
+
+
+def find_char_(primer_rest: str, item: str, item_l: str, start: int) -> tuple[int, float]:
     prev = ""
     first_seen = -1
     needle = primer_rest[0]
     for idx, ch in enumerate(item[start:], start):
         if needle == ch.lower():
-            # consecutive letters/matches don't get a penalty
-            if idx == start:
-                return start, 0
-            # start at a word is a bonus
-            if start == 0 and prev == " ":
-                return idx, -1
-            # uppercase letters count as word boundaries
-            if ch.isupper() and (not prev or prev.islower()):
-                return idx, 0
-            # so do these word boundaries
-            if prev in "-_":
-                return idx, 0
+            if idx != start and not prev:
+                raise RuntimeError(f"assertion failed: `prev` should be truthy but is '{prev}'")
+
+            # consecutive letters/matches don't get a penalty,
+            # so do jumps to word boundaries
+            if idx == start or prev in word_separators or (ch.isupper() and prev.islower()):
+                return idx, (
+                    -1.5 if idx == 0 else  # match at the beginning of item
+                    -1 if start == 0 else  # initial wide jump to a boundary
+                    0
+                )
             if first_seen == -1:
                 first_seen = idx
         prev = ch
