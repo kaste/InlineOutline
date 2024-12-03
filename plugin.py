@@ -426,18 +426,23 @@ class outline_enter_search(sublime_plugin.TextCommand):
         panel.settings().set("outline_mode_search_panel", True)
 
 
+debug_info: list[tuple[str, tuple, str]] = []
+
+
 def fuzzyfind(primer: str, collection: Iterable[TextRange]) -> list[tuple[TextRange, list[int]]]:
     """
     Fuzzy match a primer, e.g. a search term, against the items in collection.
     """
+    global debug_info
+    debug_info = []
     suggestions = []
     for item in collection:
         if score := fuzzy_score(primer, item.text):
             suggestions.append((score, item))
 
     # print("\n-", primer)
-    # for score, item in sorted(suggestions):
-    #     print("score", score, item.text)
+    # for resolution__, score__, matched_item__ in sorted(debug_info, key=lambda x: x[1]):
+    #     print(f"{resolution__:<6} {score__[0]:>4.1f} {' '.join(map(str, score__[1:])):<50} {matched_item__}")
     return [(item, positions) for (_, positions), item in sorted(suggestions)]
 
 
@@ -463,8 +468,10 @@ def fuzzy_score(primer: str, item: str) -> tuple[float, list[int]] | None:
                 # print(f"recurse. matching {primer!r} with {item!r} scored already {score}", positions, scores)
                 if (r := fuzzy_score(primer, item[shift:])):
                     return (r[0], [p + shift for p in r[1]])
+            debug_info.append(("reject", (score, positions, scores), item))
             return None
 
+    debug_info.append(("match", (score, positions, scores), item))
     return (score, positions)
 
 
