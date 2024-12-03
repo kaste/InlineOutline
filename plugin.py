@@ -484,7 +484,17 @@ def find_char_(primer_rest: str, item: str, item_l: str, start: int) -> tuple[in
     prev = ""
     first_seen = -1
     needle = primer_rest[0]
+    separators_seen = 0
     for idx, ch in enumerate(item[start:], start):
+        # We give a penalty whenever we cross a non-word char.
+        # That is necessary because `item` is not a token
+        # here but a full line.  Matches across tokens are unlikely
+        # to be intended.
+        # But keep in mind search terms like "class diff" where
+        # "class" is only meant to restrict the results.
+        if ch in word_separators:
+            separators_seen += 1 if ch in "_-" else 10
+
         if needle == ch.lower():
             if idx != start and not prev:
                 raise RuntimeError(f"assertion failed: `prev` should be truthy but is '{prev}'")
@@ -494,7 +504,7 @@ def find_char_(primer_rest: str, item: str, item_l: str, start: int) -> tuple[in
             if idx == start or prev in word_separators or (ch.isupper() and prev.islower()):
                 return idx, (
                     -1 if start == 0 else  # initial wide jump to a boundary
-                    0
+                    0 + (separators_seen / 10)
                 )
             if first_seen == -1:
                 first_seen = idx
