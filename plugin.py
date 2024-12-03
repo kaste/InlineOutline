@@ -446,6 +446,7 @@ def fuzzy_score(primer: str, item: str) -> tuple[float, list[int]] | None:
     primer_l = primer.lower()
     pos, score = -1, 0.0
     positions = []
+    scores = []
     for idx in range(len(primer)):
         try:
             pos, _score = find_char(primer, primer_l, idx, item, item_l, pos + 1)
@@ -453,8 +454,15 @@ def fuzzy_score(primer: str, item: str) -> tuple[float, list[int]] | None:
             return None
 
         positions.append(pos)
+        scores.append(_score)
+
         score += _score
         if score > 10:
+            shift = positions[0] + 1
+            if scores[0] <= 0 and shift < len(item):
+                # print(f"recurse. matching {primer!r} with {item!r} scored already {score}", positions, scores)
+                if (r := fuzzy_score(primer, item[shift:])):
+                    return (r[0], [p + shift for p in r[1]])
             return None
 
     return (score, positions)
