@@ -525,6 +525,7 @@ def find_char_(primer_rest: str, item: str, item_l: str, start: int) -> tuple[in
         ):
             return pos, start - 1 - pos
         raise ValueError(f"can't match {primer_rest!r} with {item!r}")
+
     # a jump to a complete suffix match does not get the full penalty
     if item.endswith(primer_rest):
         return len(item) - len(primer_rest), 1
