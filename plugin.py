@@ -493,7 +493,6 @@ def find_char_(primer_rest: str, item: str, item_l: str, start: int) -> tuple[in
             # so do jumps to word boundaries
             if idx == start or prev in word_separators or (ch.isupper() and prev.islower()):
                 return idx, (
-                    -1.5 if idx == 0 else  # match at the beginning of item
                     -1 if start == 0 else  # initial wide jump to a boundary
                     0
                 )
