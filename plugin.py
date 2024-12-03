@@ -511,8 +511,12 @@ def find_char_(primer_rest: str, item: str, item_l: str, start: int) -> tuple[in
     # a jump to a complete suffix match does not get the full penalty
     if item.endswith(primer_rest):
         return len(item) - len(primer_rest), 1
-    # typically the penalty is the distance we have to jump
-    return first_seen, first_seen - (start - 1)
+
+    return first_seen, (
+        first_seen - (start - 1)  # typically the penalty is the distance we have to jump
+        if start > 0 else
+        1                         # except for an initial jump
+    )
 
 
 def flip_region(region: sublime.Region) -> sublime.Region:
