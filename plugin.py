@@ -462,7 +462,7 @@ def fuzzy_score(primer: str, item: str) -> tuple[float, list[int]] | None:
         scores.append(_score)
 
         score += _score
-        if score > 10:
+        if score > 5:
             shift = positions[0] + 1
             if scores[0] <= 0 and shift < len(item):
                 # print(f"recurse. matching {primer!r} with {item!r} scored already {score}", positions, scores)
