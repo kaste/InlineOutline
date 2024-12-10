@@ -386,7 +386,7 @@ class outline_enter_search(sublime_plugin.TextCommand):
             ])
 
             regions_per_line: list[list[sublime.Region]] = [
-                reduce_regions(
+                combine_adjacent_regions(
                     sublime.Region(p + line.region.a, p + line.region.a + 1)
                     for p in sorted(positions)
                 )
@@ -553,7 +553,7 @@ def flash(view: sublime.View, message: str):
         window.status_message(message)
 
 
-def reduce_regions(regions: Iterable[sublime.Region]) -> list[sublime.Region]:
+def combine_adjacent_regions(regions: Iterable[sublime.Region]) -> list[sublime.Region]:
     prev = None
     rv = []
     for r in regions:
