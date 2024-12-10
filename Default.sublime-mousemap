@@ -1,0 +1,9 @@
+[
+    {
+        "button": "button1",
+        "count": 2,
+        "press_command": "drag_select",
+        "command": "exit_outline_mode",
+        "context": [{ "key": "outline_mode" }]
+    },
+]
