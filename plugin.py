@@ -263,16 +263,16 @@ def focus_regions(
         # if (print(a, b) or True)
     )
     # print("line_spans_to_fold", line_spans_to_fold)
-    regions_to_fold = list(
+    regions_to_fold = [
         sublime.Region(
             view.text_point(start, 0) - (1 if context == 0 else 0),
             view.text_point(end, 0) - 1
         )
         for start, end in line_spans_to_fold
-    )
+    ]
     # print("regions_to_fold", regions_to_fold)
     view.run_command("unfold_all")
-    view.fold(list(regions_to_fold))
+    view.fold(regions_to_fold)
     view.show(view.sel())
 
 
