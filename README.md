@@ -12,11 +12,11 @@ For example, you can fuzzy-search:
 
 https://github.com/kaste/InlineOutline/assets/8558/42a8a375-2bae-4385-b0df-8580d6c83f69
 
-Or walk using the arrow keys (or `,`and `.`):
+Or walk using the arrow keys (or `,` and `.`):
 
 https://github.com/kaste/InlineOutline/assets/8558/d6eca69b-c9b9-46b3-9b66-e61dd6303b47
 
-As usual, `<enter>` or double-clicking with the mouse will go to to the selected symbol
+As usual, `<enter>` or double-clicking with the mouse will go to the selected symbol
 and `<esc>` will reset the cursor and viewport.
 
 
