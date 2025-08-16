@@ -14,4 +14,9 @@
     // the Outline mode while still having the local, contextual bindings
     // installed, e.g. (`up`/`down`/`enter`).  In that case, set:
     // "bind":  "never",
+
+    // While fuzzy-searching the symbols, we mark the matching letter, this
+    // can be more or less subtle, either we just underline the chars or we
+    // draw boxes around them.
+    "subtle_match_highlighting": true,
 }

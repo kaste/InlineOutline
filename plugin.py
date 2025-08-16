@@ -45,6 +45,7 @@ ViewState: TypeAlias = "tuple[ViewportPosition, PickableSelection]"
 
 OBSERVER_KEY = "83112d45-8bc5-478d-923c-450bc49e81bd"
 SETTINGS_FILE = "InlineOutline.sublime-settings"
+SUBTLE_MATCH_HIGHLIGHTING = True
 
 
 def view_state(view: sublime.View) -> ViewState:
@@ -69,6 +70,9 @@ def settings_changed() -> None:
     plugin_settings = sublime.load_settings(SETTINGS_FILE)
     chord = plugin_settings.get("bind")
     write_key_bindings(chord)
+
+    global SUBTLE_MATCH_HIGHLIGHTING
+    SUBTLE_MATCH_HIGHLIGHTING = plugin_settings.get("subtle_match_highlighting", True)
 
 
 @lru_cache(maxsize=1)
@@ -400,6 +404,11 @@ class outline_enter_search(sublime_plugin.TextCommand):
                 scope="region.bluish",
                 flags=(
                     64
+                    | (
+                        sublime.DRAW_SOLID_UNDERLINE | sublime.DRAW_NO_OUTLINE
+                        if SUBTLE_MATCH_HIGHLIGHTING else
+                        0
+                    )
                     | sublime.RegionFlags.DRAW_NO_FILL
                     | sublime.RegionFlags.NO_UNDO
                 ),
