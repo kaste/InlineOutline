@@ -22,11 +22,21 @@
         "context": [{ "key": "outline_mode" }]
     },
     {
+        "keys": ["pagedown"], "command": "outline_next_symbol",
+        "args": { "pagewise": true },
+        "context": [{ "key": "outline_mode" }]
+    },
+    {
         "keys": ["."], "command": "outline_next_symbol",
         "context": [{ "key": "outline_mode" }]
     },
     {
         "keys": ["up"], "command": "outline_prev_symbol",
+        "context": [{ "key": "outline_mode" }]
+    },
+    {
+        "keys": ["pageup"], "command": "outline_prev_symbol",
+        "args": { "pagewise": true },
         "context": [{ "key": "outline_mode" }]
     },
     {
@@ -38,11 +48,21 @@
         "context": [{ "key": "setting.outline_mode_search_panel" }]
     },
     {
+        "keys": ["pagedown"], "command": "outline_next_symbol2",
+        "args": { "pagewise": true },
+        "context": [{ "key": "setting.outline_mode_search_panel" }]
+    },
+    {
         "keys": ["primary+j"], "command": "outline_next_symbol2",
         "context": [{ "key": "setting.outline_mode_search_panel" }]
     },
     {
         "keys": ["up"], "command": "outline_prev_symbol2",
+        "context": [{ "key": "setting.outline_mode_search_panel" }]
+    },
+    {
+        "keys": ["pageup"], "command": "outline_prev_symbol2",
+        "args": { "pagewise": true },
         "context": [{ "key": "setting.outline_mode_search_panel" }]
     },
     {

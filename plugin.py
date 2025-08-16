@@ -281,20 +281,20 @@ def focus_regions(
 
 
 class outline_next_symbol2(sublime_plugin.WindowCommand):
-    def run(self):
+    def run(self, pagewise=False):
         window = self.window
         for view in visible_views(window):
             if view.settings().get("outline_mode"):
-                view.run_command("outline_next_symbol")
+                view.run_command("outline_next_symbol", {"pagewise": pagewise})
                 return
 
 
 class outline_prev_symbol2(sublime_plugin.WindowCommand):
-    def run(self):
+    def run(self, pagewise=False):
         window = self.window
         for view in visible_views(window):
             if view.settings().get("outline_mode"):
-                view.run_command("outline_prev_symbol")
+                view.run_command("outline_prev_symbol", {"pagewise": pagewise})
                 return
 
 
@@ -306,12 +306,15 @@ def visible_views(window: sublime.Window) -> Iterator[sublime.View]:
 
 
 class outline_next_symbol(sublime_plugin.TextCommand):
-    def run(self, edit):
-        # type: (sublime.Edit) -> None
+    def run(self, edit, pagewise=False):
+        # type: (sublime.Edit, bool) -> None
         view = self.view
-        frozen_sel = [s for s in view.sel()]
-        sel = frozen_sel[0]
-        pt = sel.end()
+        if pagewise:
+            pt = view.visible_region().b
+        else:
+            frozen_sel = [s for s in view.sel()]
+            sel = frozen_sel[0]
+            pt = sel.end()
         folded_regions = view.folded_regions()
         for s in symbol_regions(view):
             if any(s.region in region for region in folded_regions):
@@ -319,26 +322,31 @@ class outline_next_symbol(sublime_plugin.TextCommand):
             if s.region.begin() > pt:
                 break
         else:
-            return
+            if not pagewise:
+                return
         set_sel(view, [flip_region(s.region)])
         view.show(s.region, show_surrounds=False)
 
 
 class outline_prev_symbol(sublime_plugin.TextCommand):
-    def run(self, edit):
-        # type: (sublime.Edit) -> None
+    def run(self, edit, pagewise=False):
+        # type: (sublime.Edit, bool) -> None
         view = self.view
-        frozen_sel = [s for s in view.sel()]
-        sel = frozen_sel[0]
-        caret = sel.begin()
+        if pagewise:
+            pt = view.visible_region().a
+        else:
+            frozen_sel = [s for s in view.sel()]
+            sel = frozen_sel[0]
+            pt = sel.begin()
         folded_regions = view.folded_regions()
         for s in reversed(symbol_regions(view)):
             if any(s.region in region for region in folded_regions):
                 continue
-            if s.region.end() < caret:
+            if s.region.end() < pt:
                 break
         else:
-            return
+            if not pagewise:
+                return
         set_sel(view, [flip_region(s.region)])
         view.show(s.region, show_surrounds=False)
 
