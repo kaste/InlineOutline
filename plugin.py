@@ -317,7 +317,7 @@ class outline_next_symbol(sublime_plugin.TextCommand):
         else:
             return
         set_sel(view, [flip_region(s.region)])
-        view.show(s.region)
+        view.show(s.region, show_surrounds=False)
 
 
 class outline_prev_symbol(sublime_plugin.TextCommand):
@@ -336,7 +336,7 @@ class outline_prev_symbol(sublime_plugin.TextCommand):
         else:
             return
         set_sel(view, [flip_region(s.region)])
-        view.show(s.region)
+        view.show(s.region, show_surrounds=False)
 
 
 PANELS: dict[sublime.Window, sublime.View] = {}
