@@ -83,7 +83,7 @@ def write_key_bindings(chord: str | list[str]):
         chord_ = "[{}]".format(", ".join(f'"{key}"' for key in chord))
         template = sublime.load_resource(str(
             Path("Packages") / package / "keymap-template.yaml"
-        ))
+        )).replace("\r", "")
         keymap = Template(template).substitute(main_key=chord_)
 
         fpath.mkdir(exist_ok=True)
