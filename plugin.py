@@ -310,11 +310,14 @@ class outline_next_symbol(sublime_plugin.TextCommand):
         # type: (sublime.Edit, bool) -> None
         view = self.view
         if pagewise:
-            pt = view.visible_region().b
-        else:
-            frozen_sel = [s for s in view.sel()]
-            sel = frozen_sel[0]
-            pt = sel.end()
+            view.run_command("move", {"by": "pages", "forward": True})
+            view.run_command("move_to", {"to": "eol", "extend": False})
+            view.run_command("outline_prev_symbol")
+            return
+
+        frozen_sel = [s for s in view.sel()]
+        sel = frozen_sel[0]
+        pt = sel.end()
         folded_regions = view.folded_regions()
         for s in symbol_regions(view):
             if any(s.region in region for region in folded_regions):
@@ -322,8 +325,7 @@ class outline_next_symbol(sublime_plugin.TextCommand):
             if s.region.begin() > pt:
                 break
         else:
-            if not pagewise:
-                return
+            return
         set_sel(view, [flip_region(s.region)])
         view.show(s.region, show_surrounds=False)
 
@@ -333,11 +335,14 @@ class outline_prev_symbol(sublime_plugin.TextCommand):
         # type: (sublime.Edit, bool) -> None
         view = self.view
         if pagewise:
-            pt = view.visible_region().a
-        else:
-            frozen_sel = [s for s in view.sel()]
-            sel = frozen_sel[0]
-            pt = sel.begin()
+            view.run_command("move", {"by": "pages", "forward": False})
+            view.run_command("move_to", {"to": "bol", "extend": False})
+            view.run_command("outline_next_symbol")
+            return
+
+        frozen_sel = [s for s in view.sel()]
+        sel = frozen_sel[0]
+        pt = sel.begin()
         folded_regions = view.folded_regions()
         for s in reversed(symbol_regions(view)):
             if any(s.region in region for region in folded_regions):
@@ -345,8 +350,7 @@ class outline_prev_symbol(sublime_plugin.TextCommand):
             if s.region.end() < pt:
                 break
         else:
-            if not pagewise:
-                return
+            return
         set_sel(view, [flip_region(s.region)])
         view.show(s.region, show_surrounds=False)
 
@@ -596,3 +600,9 @@ def symbol_regions(view: sublime.View) -> list[sublime.SymbolRegion]:
 @lru_cache(maxsize=16)
 def _symbol_regions(view: sublime.View, _cc: int) -> list[sublime.SymbolRegion]:
     return view.symbol_regions()
+    rv = view.symbol_regions()
+    for s in rv:
+        if s.name.endswith("\n"):
+            s.name = s.name.rstrip("\n")
+            s.region.b = s.region.a + len(s.name)
+    return rv
